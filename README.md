@@ -38,3 +38,7 @@ If that didn't work you can edit the ArgoCD Service resource for the webUI after
 ```
 kubectl edit svc -n argocd argocd-server
 ```
+To get a login token for the ARGO-CD WebUI:
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
