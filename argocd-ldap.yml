@@ -1,4 +1,7 @@
 # This file is used to "join" ArgoCD to an LDAP/FreeIPA server.
+# Note: When you apply this file, the pods running dex and the web-frontend to ARGO need to be restarted. Otherwise, it will look like you've got bad LDAP settings.
+# kubectl -n argocd get pods |grep -E "argocd-dex-server|argocd-server"
+# kubectl delete pod -n argocd [dexpodname]
 ---
 apiVersion: v1
 kind: ConfigMap
