@@ -1,0 +1,56 @@
+# This file is used to "join" ArgoCD to an LDAP/FreeIPA server.
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+  namespace: argocd
+data:
+  # The external URL of your Argo CD instance (Required for OIDC callbacks)
+  url: https://argocd.lab.sanderson.com
+
+  dex.config: |
+    connectors:
+    - type: ldap
+      name: FreeIPA
+      id: ldap
+      config:
+        host: 192.168.1.201 # Use port 389 if insecureNoSSL is true
+        insecureNoSSL: true
+        insecureSkipVerify: true
+
+        # References the keys we injected into argocd-secret
+        bindDN: "uid=admin,cn=users,cn=accounts,dc=lab,dc=sanderson,dc=com"
+        bindPW: ""
+
+        usernamePrompt: Email Address
+
+        userSearch:
+          baseDN: "cn=users,cn=accounts,dc=lab,dc=sanderson,dc=com"
+          filter: "(objectClass=person)"
+          username: uid
+          idAttr: uid
+          emailAttr: mail
+          nameAttr: cn
+
+        groupSearch:
+          baseDN: "cn=groups,cn=accounts,dc=lab,dc=sanderson,dc=com"
+          filter: "(objectClass=posixGroup)"
+          userAttr: DN
+          groupAttr: member
+          nameAttr: cn
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+  namespace: argocd
+data:
+  # Sets the fallback role if an LDAP user logs in but isn't in a listed group
+  policy.default: role:readonly
+
+  # Maps LDAP groups to ArgoCD roles: g, <LDAP_GROUP_NAME>, <ARGOCD_ROLE>
+  policy.csv: |
+    g, admins, role:admin
+    g, Dev_Team, role:developer
+~
