@@ -30,7 +30,7 @@ I modified the section of the install.yml file that defines the "Service" resour
 32804     targetPort: 8080
 32805   selector:
 32806     app.kubernetes.io/name: argocd-server
-32807   Type: LoadBalancer
+32807   type: LoadBalancer
 32808 ---
 ```
 
