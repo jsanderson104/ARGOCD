@@ -7,7 +7,8 @@ kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/re
 ```
 Then check that status of your pods:
 
-I modified the section of the install.yml file that defines the "Service" resource for the Webserver "front-end/UI" to ArgoCD and added the "Type: LoadBalancer" key/value pair so that it would have an external IP automatically.
+I modified the section of the install.yml file that defines the "Service" resource for the Webserver "front-end/UI" to ArgoCD and added the "Type: LoadBalancer" key/value pair so that it would have an external IP automatically. <br>
+Here's the entire svc definition. Notice at bottom on Line 32807 it now says "type: LoadBalancer" this is the line that needed to be added to automatically get a LAN IP so we could actually "get to and use it".
 ```
 32786 ---
 32787 apiVersion: v1
